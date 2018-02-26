@@ -88,7 +88,7 @@ echo. >> %LOG_LOCATION%%LOGFILE%
 
 
 
-REM Deleting all netork mapping to clear session
+REM Deleting all netork mapping to clear session. This is important as if scheduler is used it may not connect next time because of previous sessions.
 
 echo ---------------------Closing----------------------------- >> %LOG_LOCATION%%LOGFILE%
 echo Disconnecting all network session... >> %LOG_LOCATION%%LOGFILE%
