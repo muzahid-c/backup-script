@@ -1,10 +1,10 @@
 @ECHO OFF
-REM Automatic Backup taking program v1.0
+REM Backup Taking Script
 REM Date: 01 Feb'17
 
 REM No custom error handling, if error occurs log file will be populated with default message which may help
 
-REM For net use authentication if admin share is used 
+REM For net use authentication is needed if admin/password protected share is used
 SET user=username
 SET pass=password
 
@@ -31,66 +31,66 @@ NET USE "\\server2\C$\file" /user:%user% %pass% >nul
 
 REM Set start time for each pc in logfile after maping all the desired location
 
-echo ---------------------server1----------------------------- >> %LOG_LOCATION%%LOGFILE%
-echo Backup start time:- %date%-%time% >> %LOG_LOCATION%%LOGFILE%
+ECHO ---------------------server1----------------------------- >> %LOG_LOCATION%%LOGFILE%
+ECHO Backup start time:- %date%-%time% >> %LOG_LOCATION%%LOGFILE%
 
 REM Add a new line in log file
-echo. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
 
 REM Copy only new/changed file and populate log
-xcopy "\\server1\share_file\*" "Backup_Location\server1\" /D /E /C /Y >> %LOG_LOCATION%%LOGFILE%
+XCOPY "\\server1\share_file\*" "Backup_Location\server1\" /D /E /C /Y >> %LOG_LOCATION%%LOGFILE%
 
 REM For calculating size of backup in backup destination folder 
 REM Using powershell as windows batch has limitation for recursive size measurement
-echo. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
 
-echo Source Size (bytes) >> %LOG_LOCATION%%LOGFILE% 
+ECHO Source Size (bytes) >> %LOG_LOCATION%%LOGFILE% 
 powershell -Command "& {Get-ChildItem -Path \\server1\share_file -Recurse | Measure-Object -Sum Length | Select-Object -expand Sum}" >> %LOG_LOCATION%%LOGFILE%
 
-echo. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
 
 
-echo Destination Size (bytes) >> %LOG_LOCATION%%LOGFILE% 
+ECHO Destination Size (bytes) >> %LOG_LOCATION%%LOGFILE% 
 powershell -Command "& {Get-ChildItem -Path Backup_Location\server1 -Recurse | Measure-Object -Sum Length | Select-Object -expand Sum}" >> %LOG_LOCATION%%LOGFILE%
 
 REM Set finish time in logfile
-echo. >> %LOG_LOCATION%%LOGFILE%
-echo Backup end time:- %date%-%time% >> %LOG_LOCATION%%LOGFILE%
-echo. >> %LOG_LOCATION%%LOGFILE%
-echo. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
+ECHO Backup end time:- %date%-%time% >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
 
-echo ---------------------server2----------------------------- >> %LOG_LOCATION%%LOGFILE%
-echo Backup start time:- %date%-%time% >> %LOG_LOCATION%%LOGFILE%
+ECHO ---------------------server2----------------------------- >> %LOG_LOCATION%%LOGFILE%
+ECHO Backup start time:- %date%-%time% >> %LOG_LOCATION%%LOGFILE%
 REM Add a new line in log file
-echo. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
 
 REM Copy only new/changed file and populate log
-xcopy "\\server2\C$\file\*" "Backup_Location\server2\" /D /E /C /Y >> %LOG_LOCATION%%LOGFILE%
+XCOPY "\\server2\C$\file\*" "Backup_Location\server2\" /D /E /C /Y >> %LOG_LOCATION%%LOGFILE%
 
 REM For calculating size of backup in backup destination folder 
 REM Using powershell as windows batch has limitation for recursive size measurement
-echo. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
 
-echo Source Size (bytes) >> %LOG_LOCATION%%LOGFILE% 
+ECHO Source Size (bytes) >> %LOG_LOCATION%%LOGFILE% 
 powershell -Command "& {Get-ChildItem -Path \\server2\C$\file -Recurse | Measure-Object -Sum Length | Select-Object -expand Sum}" >> %LOG_LOCATION%%LOGFILE%
 
-echo. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
 
 
-echo Destination Size (bytes) >> %LOG_LOCATION%%LOGFILE% 
+ECHO Destination Size (bytes) >> %LOG_LOCATION%%LOGFILE% 
 powershell -Command "& {Get-ChildItem -Path Backup_Location\server2 -Recurse | Measure-Object -Sum Length | Select-Object -expand Sum}" >> %LOG_LOCATION%%LOGFILE%
 
 REM Set finish time in logfile
-echo. >> %LOG_LOCATION%%LOGFILE%
-echo Backup end time:- %date%-%time% >> %LOG_LOCATION%%LOGFILE%
-echo. >> %LOG_LOCATION%%LOGFILE%
-echo. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
+ECHO Backup end time:- %date%-%time% >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
+ECHO. >> %LOG_LOCATION%%LOGFILE%
 
 
 
 REM Deleting all netork mapping to clear session. This is important as if scheduler is used it may not connect next time because of previous sessions.
 
-echo ---------------------Closing----------------------------- >> %LOG_LOCATION%%LOGFILE%
-echo Disconnecting all network session... >> %LOG_LOCATION%%LOGFILE%
-net use * /delete /YES >nul
-echo Done! >> %LOG_LOCATION%%LOGFILE%
+ECHO ---------------------Closing----------------------------- >> %LOG_LOCATION%%LOGFILE%
+ECHO Disconnecting all network session... >> %LOG_LOCATION%%LOGFILE%
+NET USE * /DELETE /YES >nul
+ECHO Done! >> %LOG_LOCATION%%LOGFILE%
